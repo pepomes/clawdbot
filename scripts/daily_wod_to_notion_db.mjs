@@ -178,8 +178,12 @@ async function main() {
   const isoDate = dubaiTodayISO();
   const ddmmyyyy = ddmmyyyyFromISO(isoDate);
 
-  const sourceMd = process.env.WOD_MARKDOWN;
-  if (!sourceMd) throw new Error('Missing WOD_MARKDOWN (expected vfuae.com/wod/ markdown).');
+  let sourceMd = process.env.WOD_MARKDOWN;
+  const sourceFile = process.env.WOD_MARKDOWN_FILE;
+  if (!sourceMd && sourceFile) {
+    sourceMd = fs.readFileSync(sourceFile, 'utf8');
+  }
+  if (!sourceMd) throw new Error('Missing WOD_MARKDOWN or WOD_MARKDOWN_FILE (expected vfuae.com/wod/ markdown).');
 
   const entries = parseWodPage(sourceMd, ddmmyyyy);
   if (!entries.length) throw new Error(`No entries found for ${ddmmyyyy}.`);
