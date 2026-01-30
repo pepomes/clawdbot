@@ -208,31 +208,7 @@ async function fetchWodMarkdown() {
 async function main() {
   loadEnv();
 
-  const token = process.env.NOTION_TOKEN;
-  const pageId = process.env.NOTION_PAGE_ID;
-  if (!token) throw new Error('Missing NOTION_TOKEN in environment/.env');
-  if (!pageId) throw new Error('Missing NOTION_PAGE_ID in environment/.env');
-
-  const isoDate = dubaiTodayISO();
-
-  // When run under the OpenClaw agent, it should pass WOD_MARKDOWN from web_fetch.
-  const sourceMd = process.env.WOD_MARKDOWN;
-  if (!sourceMd) {
-    throw new Error('Missing WOD_MARKDOWN. Run this via the agent which fetches https://vfuae.com/wod/ using web_fetch and provides markdown.');
-  }
-
-  const ddmmyyyy = ddmmyyyyFromISO(isoDate);
-  const entries = parseWodPage(sourceMd, ddmmyyyy);
-  if (!entries.length) {
-    throw new Error(`No entries found for ${ddmmyyyy} in fetched page.`);
-  }
-
-  const md = buildMarkdown(isoDate, entries);
-  const blocks = mdToNotionBlocks(md);
-
-  await notionAppendBlocks({ token, pageId, blocks });
-
-  process.stdout.write(`Updated Notion page ${pageId} with ${entries.length} entries for ${isoDate}.\n`);
+  throw new Error('This script is deprecated. Use scripts/daily_wod_to_notion_db.mjs (the Notion page contains a database).');
 }
 
 main().catch((err) => {
